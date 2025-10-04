@@ -1,273 +1,212 @@
-# MindPulse - AI-Powered Mental Health Support System
+# MindPulse - AI Mental Health Support System
 
-## 🏗️ High-Level Architecture
+AI-powered mental health support using Claude with RAG (Retrieval-Augmented Generation).
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        Web Application                       │
-│                    (Frontend - Requests)                     │
-└────────────────────────┬────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│                     FastAPI Server                           │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  Endpoints:                                           │   │
-│  │  - /api/chat (mental health conversation)            │   │
-│  │  - /api/analyze-sentiment (sentiment analysis)       │   │
-│  │  - /api/diagnose (diagnosis insights)                │   │
-│  │  - /api/health (health check)                        │   │
-│  └──────────────────────────────────────────────────────┘   │
-└────────────────────────┬────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Claude Agent (AI Orchestrator)                  │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  - Uses Anthropic Claude API                         │   │
-│  │  - Context-aware conversations                       │   │
-│  │  - Retrieves relevant data from datasets             │   │
-│  │  - Applies prompt engineering templates              │   │
-│  └──────────────────────────────────────────────────────┘   │
-└────────────────────────┬────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   Data Processing Layer                      │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │  Dataset 1   │  │  Dataset 2   │  │  Dataset 3   │      │
-│  │  Counseling  │  │  Sentiment   │  │  Diagnosis   │      │
-│  │  Convos      │  │  Analysis    │  │  & Treatment │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-└─────────────────────────────────────────────────────────────┘
-```
+## 🚀 Quick Start
 
-## 📊 Dataset Overview
+### Backend Setup
 
-1. **Mental Health Counseling Conversations** - Context-response pairs from therapy sessions
-2. **Sentiment Analysis for Mental Health** - Labeled sentiment data for mental health text
-3. **Mental Health Diagnosis and Treatment Monitoring** - Medical diagnosis and treatment tracking
+1. **Install Dependencies**
+   ```bash
+   cd server
+   pip install -r requirements.txt
+   ```
 
-## 🚀 Getting Started
+   *(Optional)* **For SMS alerts**: See [SMS_SETUP.md](server/SMS_SETUP.md)
 
-### Prerequisites
-- Python 3.9+
-- Anthropic API Key (for Claude)
-- Kaggle account for dataset downloads
-
-### Installation
-
-1. Clone the repository and navigate to the project:
+2. **Configure API Key**
 ```bash
-cd /path/to/MindPulse
+cd server
+cp env-template.txt .env
+# Edit .env and add your Anthropic API key
+nano .env
 ```
 
-2. Install dependencies:
+Get your API key: https://console.anthropic.com/
+
+3. **Start Backend Server**
 ```bash
-pip install -r requirements.txt
+cd server
+python3 main.py
 ```
 
-3. Set up environment variables:
+Server runs on: http://localhost:8000
+
+### Web App Setup
+
+4. **Install Frontend Dependencies**
 ```bash
-cp .env.example .env
-# Edit .env and add your ANTHROPIC_API_KEY
+cd web
+npm install
 ```
 
-4. Download the datasets:
+5. **Start Web App**
 ```bash
-# Dataset 1 is already present in dataset/mentalHealthCounselingConversations/
-# Download datasets 2 and 3 from Kaggle and place them in dataset/ folder
+npm start
 ```
 
-5. Run the FastAPI server:
-```bash
-python main.py
-```
+App opens at: http://localhost:3000
 
-The server will start at `http://localhost:8000`
+### Test the Complete System
+
+Open http://localhost:3000 in your browser, fill out the survey, and see Claude's empathetic response!
 
 ## 📁 Project Structure
 
 ```
 MindPulse/
-├── main.py                          # Application entry point
-├── config.py                        # Configuration settings
-├── requirements.txt                 # Python dependencies
-├── .env.example                     # Environment variables template
-├── README.md                        # This file
-│
-├── api/
-│   ├── __init__.py
-│   └── routes.py                    # FastAPI endpoint definitions
-│
-├── agents/
-│   ├── __init__.py
-│   └── claude_agent.py              # Claude AI agent wrapper
-│
-├── data_loaders/
-│   ├── __init__.py
-│   ├── counseling_loader.py         # Dataset 1 loader
-│   ├── sentiment_loader.py          # Dataset 2 loader
-│   └── diagnosis_loader.py          # Dataset 3 loader
-│
-├── prompts/
-│   ├── __init__.py
-│   ├── system_prompts.py            # System-level prompts
-│   └── templates.py                 # Prompt templates
-│
-├── utils/
-│   ├── __init__.py
-│   ├── vector_store.py              # Vector storage for RAG
-│   └── helpers.py                   # Utility functions
-│
-└── dataset/
-    ├── mentalHealthCounselingConversations/
-    ├── sentiment_analysis/          # Place dataset 2 here
-    └── diagnosis_treatment/         # Place dataset 3 here
+├── README.md
+├── dataset/                    # Kaggle datasets
+│   ├── mentalHealthCounselingConversations/
+│   ├── sentiment_analysis/
+│   └── diagnosis_treatment/
+├── server/                     # Backend (Python)
+│   ├── main.py                 # Entry point
+│   ├── config.py              # Configuration
+│   ├── requirements.txt       # Dependencies
+│   ├── .env                   # API keys (create this)
+│   ├── agents/                # Claude AI agent
+│   ├── api/                   # FastAPI routes
+│   ├── data_loaders/          # Dataset loaders
+│   ├── prompts/               # Prompt engineering
+│   └── utils/                 # Utilities
+└── web/                       # Frontend (TypeScript React)
+    ├── public/
+    ├── src/
+    │   ├── components/        # Survey form & results
+    │   ├── services/          # API calls
+    │   ├── types/             # TypeScript types
+    │   └── App.tsx            # Main component
+    ├── package.json
+    └── README.md
 ```
 
-## 🔧 API Endpoints
+## 🎯 API Endpoints
 
-### 1. Chat Endpoint
-**POST** `/api/chat`
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/api/analyze-survey` | POST | **Daily survey analysis** (for your web app) |
+| `/api/chat` | POST | Mental health chat |
+| `/api/analyze-sentiment` | POST | Sentiment analysis |
+| `/api/diagnose` | POST | Symptom insights |
+| `/api/health` | GET | System status |
+| `/api/stats` | GET | Dataset statistics |
+
+### Survey Endpoint (Main endpoint for your web app)
+
+**POST** `/api/analyze-survey`
+
+Send your 5 survey questions in one request:
+
 ```json
 {
-  "message": "I've been feeling really anxious lately",
-  "session_id": "optional-session-id"
+  "medication_taken": false,
+  "mood_rating": 4,
+  "sleep_quality": 3,
+  "physical_activity": 2,
+  "thoughts": "I've been feeling overwhelmed..."
 }
 ```
 
 Response:
 ```json
 {
-  "response": "I understand that anxiety can be overwhelming...",
-  "session_id": "session-123",
-  "context_used": ["counseling_data"],
-  "sentiment": "negative"
+  "message": "I hear that you're feeling overwhelmed...",
+  "recommendations": [
+    "Try setting a reminder for your medication",
+    "Even 10 minutes of gentle movement can help",
+    "Consider reaching out to someone you trust"
+  ],
+  "risk_level": "moderate",
+  "key_concerns": ["low_mood", "poor_sleep", "missed_medication"],
+  "provider_contacted": false
 }
 ```
 
-### 2. Sentiment Analysis
-**POST** `/api/analyze-sentiment`
-```json
-{
-  "text": "I feel hopeless and can't sleep"
-}
-```
+**🚨 Provider Alert Feature:**
+- If mental health deterioration is detected (e.g., very low mood, missed medication)
+- `provider_contacted` will be `true`
+- An SMS is automatically sent to the configured healthcare provider
+- Web UI displays a notification to the user
 
-Response:
-```json
-{
-  "sentiment": "negative",
-  "confidence": 0.87,
-  "emotions": ["sadness", "anxiety"],
-  "severity": "moderate"
-}
-```
+## 📖 API Documentation
 
-### 3. Diagnosis Insights
-**POST** `/api/diagnose`
-```json
-{
-  "symptoms": ["insomnia", "loss of appetite", "fatigue"],
-  "duration": "2 weeks"
-}
-```
-
-Response:
-```json
-{
-  "insights": "Based on patterns in the data...",
-  "similar_cases": 45,
-  "recommendations": ["Seek professional help", "..."]
-}
-```
-
-### 4. Health Check
-**GET** `/api/health`
-
-Response:
-```json
-{
-  "status": "healthy",
-  "datasets_loaded": true,
-  "claude_available": true
-}
-```
-
-## 🧠 How It Works
-
-### 1. **User Request Flow**
-   - Web app sends request to FastAPI
-   - FastAPI validates and routes to appropriate endpoint
-   - Request data is passed to Claude Agent
-
-### 2. **Claude Agent Processing**
-   - Agent analyzes user input
-   - Determines which datasets are relevant
-   - Queries data loaders for context
-   - Constructs prompt with system instructions + context + user query
-   - Sends to Claude API
-
-### 3. **Data Retrieval**
-   - Data loaders search relevant datasets
-   - Use semantic search (vector embeddings) for similarity
-   - Return top-k most relevant examples
-   - Context is added to Claude's prompt
-
-### 4. **Response Generation**
-   - Claude generates empathetic, informed response
-   - Response includes citations from datasets
-   - Includes confidence scores and sentiment analysis
-   - Returns structured JSON to web app
-
-## 🔐 Security & Privacy
-
-- No user data is stored permanently
-- Session IDs are temporary (in-memory only)
-- API key stored in environment variables
-- CORS configured for your frontend domain
-- Rate limiting enabled
-
-## 🎯 Key Features
-
-1. **Context-Aware Responses**: Uses historical counseling data to provide informed guidance
-2. **Sentiment Analysis**: Real-time emotion detection in user messages
-3. **Multi-Dataset Intelligence**: Combines insights from 3 specialized datasets
-4. **Session Management**: Maintains conversation context
-5. **RAG (Retrieval-Augmented Generation)**: Retrieves relevant examples before responding
-
-## 📝 Environment Variables
-
-Create a `.env` file with:
-```
-ANTHROPIC_API_KEY=your_api_key_here
-FASTAPI_HOST=0.0.0.0
-FASTAPI_PORT=8000
-LOG_LEVEL=INFO
-MAX_CONTEXT_EXAMPLES=5
-EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
-```
+Visit http://localhost:8000/docs for interactive API documentation.
 
 ## 🧪 Testing
 
+**Test the survey endpoint:**
 ```bash
-# Test the API
-python -m pytest tests/
-
-# Manual testing
-curl -X POST "http://localhost:8000/api/chat" \
-  -H "Content-Type: application/json" \
-  -d '{"message": "I feel anxious"}'
+cd server
+python3 test_survey.py
 ```
 
-## 📚 Additional Resources
+**Test all endpoints:**
+```bash
+cd server
+python3 test_api.py
+```
 
-- [Anthropic Claude API Docs](https://docs.anthropic.com/)
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [Mental Health Data Ethics](https://www.nimh.nih.gov/)
+**Manual test (cURL):**
+```bash
+curl -X POST http://localhost:8000/api/analyze-survey \
+  -H "Content-Type: application/json" \
+  -d '{
+    "medication_taken": true,
+    "mood_rating": 7,
+    "sleep_quality": 6,
+    "physical_activity": 5,
+    "thoughts": "Feeling pretty good today"
+  }'
+```
 
-## ⚠️ Disclaimer
+**Interactive docs:**
+Open browser: http://localhost:8000/docs
 
-This system is for educational/hackathon purposes and should NOT replace professional mental health services. Always encourage users to seek help from licensed professionals for serious mental health concerns.
+## 📊 Datasets
 
+Three Kaggle datasets:
+1. **Counseling Conversations** (3,512 conversations) ✅ Included
+2. **Sentiment Analysis** - Download from Kaggle
+3. **Diagnosis & Treatment** - Download from Kaggle
+
+The system works with placeholder data if datasets 2 & 3 aren't downloaded.
+
+## 🛠️ Tech Stack
+
+- **Backend:** FastAPI + Python
+- **AI:** Claude 3.5 Sonnet (Anthropic)
+- **RAG:** Sentence Transformers
+- **SMS:** Twilio (optional)
+- **Data:** Pandas + NumPy
+- **Frontend:** TypeScript + React
+
+## 🔧 Configuration
+
+Edit `server/.env`:
+```env
+ANTHROPIC_API_KEY=your_key_here
+FASTAPI_PORT=8000
+CLAUDE_MODEL=claude-3-5-sonnet-20241022
+
+# SMS Alerts (Optional - for provider notifications)
+ENABLE_SMS_ALERTS=False
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_token
+TWILIO_PHONE_NUMBER=+1234567890
+PROVIDER_PHONE_NUMBER=+1234567890
+```
+
+See [SMS_SETUP.md](server/SMS_SETUP.md) for SMS alert configuration.
+
+## ⚠️ Important
+
+This is for educational/hackathon purposes only. NOT a replacement for professional mental health care.
+
+**Crisis Resources:**
+- Suicide Prevention Lifeline: 988 or 1-800-273-8255
+- Crisis Text Line: Text HOME to 741741
+
+## 📝 License
+
+For hackathon use.
