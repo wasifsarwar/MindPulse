@@ -192,12 +192,7 @@ CLAUDE_MODEL=claude-3-5-sonnet-20241022
 # SMS Alerts (Optional - for provider notifications)
 ENABLE_SMS_ALERTS=False
 TWILIO_ACCOUNT_SID=your_twilio_sid
-TWILIO_AUTH_TOKEN=your_twilio_token
-TWILIO_PHONE_NUMBER=+1234567890
-PROVIDER_PHONE_NUMBER=+1234567890
-```
 
-See [SMS_SETUP.md](server/SMS_SETUP.md) for SMS alert configuration.
 
 ## ⚠️ Important
 
