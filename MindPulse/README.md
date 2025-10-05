@@ -8,15 +8,15 @@ AI-powered mental health support using Claude with RAG (Retrieval-Augmented Gene
 
 1. **Install Dependencies**
    ```bash
-   cd server
+   cd src/server
    pip install -r requirements.txt
    ```
 
-   *(Optional)* **For SMS alerts**: See [SMS_SETUP.md](server/SMS_SETUP.md)
+   *(Optional)* **For SMS alerts**: See [src/server/SMS_SETUP.md](src/server/SMS_SETUP.md)
 
 2. **Configure API Key**
 ```bash
-cd server
+cd src/server
 cp env-template.txt .env
 # Edit .env and add your Anthropic API key
 nano .env
@@ -26,7 +26,7 @@ Get your API key: https://console.anthropic.com/
 
 3. **Start Backend Server**
 ```bash
-cd server
+cd src/server
 python3 main.py
 ```
 
@@ -36,7 +36,7 @@ Server runs on: http://localhost:8000
 
 4. **Install Frontend Dependencies**
 ```bash
-cd web
+cd src/web
 npm install
 ```
 
@@ -56,29 +56,31 @@ Open http://localhost:3000 in your browser, fill out the survey, and see Claude'
 ```
 MindPulse/
 ├── README.md
-├── dataset/                    # Kaggle datasets
-│   ├── mentalHealthCounselingConversations/
-│   ├── sentiment_analysis/
-│   └── diagnosis_treatment/
-├── server/                     # Backend (Python)
-│   ├── main.py                 # Entry point
-│   ├── config.py              # Configuration
-│   ├── requirements.txt       # Dependencies
-│   ├── .env                   # API keys (create this)
-│   ├── agents/                # Claude AI agent
-│   ├── api/                   # FastAPI routes
-│   ├── data_loaders/          # Dataset loaders
-│   ├── prompts/               # Prompt engineering
-│   └── utils/                 # Utilities
-└── web/                       # Frontend (TypeScript React)
-    ├── public/
-    ├── src/
-    │   ├── components/        # Survey form & results
-    │   ├── services/          # API calls
-    │   ├── types/             # TypeScript types
-    │   └── App.tsx            # Main component
-    ├── package.json
-    └── README.md
+├── src/
+│   ├── dataset/                    # Kaggle datasets
+│   │   ├── mentalHealthCounselingConversations/
+│   │   ├── sentiment_analysis/
+│   │   └── diagnosis_treatment/
+│   ├── server/                     # Backend (Python)
+│   │   ├── main.py                 # Entry point
+│   │   ├── config.py              # Configuration
+│   │   ├── requirements.txt       # Dependencies
+│   │   ├── .env                   # API keys (create this)
+│   │   ├── agents/                # Claude AI agent
+│   │   ├── api/                   # FastAPI routes
+│   │   ├── data_loaders/          # Dataset loaders
+│   │   ├── prompts/               # Prompt engineering
+│   │   ├── utils/                 # Utilities
+│   │   └── tests/                 # Test files
+│   └── web/                       # Frontend (TypeScript React)
+│       ├── public/
+│       ├── src/
+│       │   ├── components/        # Survey form & results
+│       │   ├── services/          # API calls
+│       │   ├── types/             # TypeScript types
+│       │   └── App.tsx            # Main component
+│       ├── package.json
+│       └── README.md
 ```
 
 ## 🎯 API Endpoints
@@ -137,13 +139,13 @@ Visit http://localhost:8000/docs for interactive API documentation.
 
 **Test the survey endpoint:**
 ```bash
-cd server
+cd src/server/tests
 python3 test_survey.py
 ```
 
 **Test all endpoints:**
 ```bash
-cd server
+cd src/server/tests
 python3 test_api.py
 ```
 

@@ -1,5 +1,8 @@
 """Test script for SMS deterioration detection logic."""
 
+import sys
+sys.path.insert(0, '..')  # Add parent directory to path
+
 from utils.sms import is_deterioration_detected
 
 def test_scenarios():
@@ -90,3 +93,4 @@ def test_scenarios():
 
 if __name__ == "__main__":
     test_scenarios()
+

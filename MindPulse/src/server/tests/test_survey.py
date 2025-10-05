@@ -52,7 +52,7 @@ try:
 except requests.exceptions.ConnectionError:
     print("❌ Error: Could not connect to server")
     print("   Make sure the server is running:")
-    print("   cd server && python3 main.py")
+    print("   cd src/server && python3 main.py")
 except Exception as e:
     print(f"❌ Error: {e}")
 
