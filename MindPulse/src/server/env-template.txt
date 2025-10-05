@@ -1,5 +1,5 @@
 # Anthropic API Configuration
-ANTHROPIC_API_KEY=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
+ANTHROPIC_API_KEY=
 
 # FastAPI Configuration
 FASTAPI_HOST=0.0.0.0
@@ -23,4 +23,11 @@ EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
 
 # Session Configuration
 SESSION_TIMEOUT_MINUTES=30
+
+# SMS Notifications (Twilio)
+TWILIO_ACCOUNT_SID=your_twilio_account_sid_here
+TWILIO_AUTH_TOKEN=your_twilio_auth_token_here
+TWILIO_PHONE_NUMBER=+1234567890
+PROVIDER_PHONE_NUMBER=+1234567890
+ENABLE_SMS_ALERTS=False
 
