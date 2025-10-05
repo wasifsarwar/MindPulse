@@ -1,0 +1,165 @@
+# ========================
+# MindPulse .gitignore
+# ========================
+
+# ===== SECRETS & ENV =====
+# Never commit API keys or secrets!
+.env
+.env.local
+.env.*.local
+src/server/.env
+*.key
+secrets/
+
+# ===== PYTHON =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Testing
+.pytest_cache/
+.coverage
+.tox/
+htmlcov/
+.hypothesis/
+
+# ===== NODE / REACT =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# React build
+src/web/build/
+src/web/.pnp
+.pnp.js
+
+# ===== LOGS =====
+*.log
+logs/
+src/logs/
+src/server/logs/
+*.log.*
+
+# ===== IDE & EDITORS =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.code-workspace
+
+# ===== OS FILES =====
+# macOS
+.DS_Store
+**/.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ===== DATABASE FILES =====
+*.db
+*.sqlite
+*.sqlite3
+
+# ===== JUPYTER NOTEBOOKS =====
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# ===== TEMPORARY FILES =====
+*.tmp
+*.temp
+tmp/
+temp/
+*.bak
+*.cache
+
+# ===== LARGE FILES & ARCHIVES =====
+# Keep the dataset CSVs but ignore large archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Model files (if you add any ML models)
+*.pt
+*.pth
+*.h5
+*.pkl
+*.pickle
+*.joblib
+*.model
+
+# ===== BUILD ARTIFACTS =====
+dist/
+build/
+*.egg-info/
+
+# ===== COVERAGE REPORTS =====
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# ===== DOCUMENTATION BUILDS =====
+docs/_build/
+site/
+
+# ===== MISC =====
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytype/
+.pyre/
+
+# Temporary scripts (keep if needed, but typically not committed)
+restructure.py
+RESTRUCTURE_INSTRUCTIONS.md
+CLEANUP_SUMMARY.md
+move_tests.py
+
+# Local environment setup files
+.python-version
+.node-version
+
