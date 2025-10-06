@@ -310,6 +310,8 @@ class ClaudeAgent:
                 determined_concerns.append("low_mood")
             elif mood_rating <= 5:
                 determined_concerns.append("mediocre_mood")
+            elif mood_rating == 6:
+                determined_concerns.append("okay_mood")  # Track "just okay" separately
             if sleep_quality <= 3:
                 determined_concerns.append("poor_sleep")
             elif sleep_quality <= 5:
@@ -319,13 +321,29 @@ class ClaudeAgent:
             elif physical_activity <= 5:
                 determined_concerns.append("low_activity")
             
+            # CRITICAL: Detect discrepancy between physical health and mood
+            physical_avg = (sleep_quality + physical_activity) / 2
+            mood_discrepancy = False
+            severe_mood_discrepancy = False
+            
+            if physical_avg >= 7 and mood_rating <= 6:
+                mood_discrepancy = True
+                determined_concerns.append("mood_physical_discrepancy")
+                logger.warning(f"⚠️ Mood discrepancy detected: Sleep/Activity avg {physical_avg:.1f} but mood {mood_rating}")
+            
+            if physical_avg >= 6 and mood_rating <= 4:
+                severe_mood_discrepancy = True
+                determined_concerns.append("severe_mood_discrepancy")
+                logger.warning(f"⚠️ SEVERE mood discrepancy: Sleep/Activity avg {physical_avg:.1f} but mood {mood_rating}")
+            
             # Calculate risk level based on factors - nuanced clinical assessment
             # Count CRITICAL concerns (not mediocre ones)
             critical_concerns = [c for c in determined_concerns if c in ["missed_medication", "low_mood", "poor_sleep", "minimal_activity"]]
-            mediocre_concerns = [c for c in determined_concerns if c in ["mediocre_mood", "mediocre_sleep", "low_activity"]]
+            mediocre_concerns = [c for c in determined_concerns if c in ["mediocre_mood", "mediocre_sleep", "low_activity", "okay_mood"]]
             
             # HIGH RISK criteria (serious combinations requiring immediate attention)
             if (
+                severe_mood_discrepancy or  # Good physical health but very low mood - major red flag
                 (not medication_taken and mood_rating <= 3) or  # Missed meds + very low mood
                 len(critical_concerns) >= 3 or  # 3+ critical factors
                 (len(critical_concerns) >= 2 and mood_rating <= 2) or  # 2+ factors with critical mood
@@ -334,13 +352,15 @@ class ClaudeAgent:
                 determined_risk = "high"
             # MODERATE RISK criteria (concerning patterns)
             elif (
+                mood_discrepancy or  # Physical health good but mood mediocre/low - underlying issue
                 len(critical_concerns) >= 2 or  # 2+ critical concerns
                 (not medication_taken and (mood_rating <= 5 or sleep_quality <= 5)) or  # Missed meds + mediocre metrics
                 mood_rating <= 3 or  # Very low mood alone
-                (mood_rating <= 5 and sleep_quality <= 5 and physical_activity <= 5)  # Everything mediocre
+                (mood_rating <= 5 and sleep_quality <= 5 and physical_activity <= 5) or  # Everything mediocre
+                (mood_rating == 6 and sleep_quality >= 7 and physical_activity >= 7)  # Just "okay" mood despite good physical health
             ):
                 determined_risk = "moderate"
-            # LOW RISK - but may need encouragement if things are just "okay"
+            # LOW RISK - only when things are genuinely going well
             else:
                 determined_risk = "low"
             
@@ -411,6 +431,8 @@ class ClaudeAgent:
                     current_section = "recommendations"
                 elif line.startswith("KEY_CONCERNS:"):
                     concerns_text = line.replace("KEY_CONCERNS:", "").strip()
+                    # Remove brackets if present
+                    concerns_text = concerns_text.strip("[]")
                     key_concerns = [c.strip() for c in concerns_text.split(",") if c.strip()]
                     current_section = None
                 elif line.startswith("RISK_LEVEL:"):

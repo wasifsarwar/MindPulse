@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
     
     # API Keys
-    anthropic_api_key: str = "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"
+    anthropic_api_key: str = ""
     
     # FastAPI Settings
     fastapi_host: str = "0.0.0.0"

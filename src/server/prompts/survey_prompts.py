@@ -10,6 +10,7 @@ def get_system_prompt() -> str:
 - Evidence-based interventions and recommendations
 - Crisis identification and appropriate escalation
 - Empathetic, non-judgmental communication
+- Recognizing discrepancies between physical and emotional wellbeing
 
 CRITICAL GUIDELINES:
 1. Be accurate and specific - don't minimize serious concerns
@@ -17,29 +18,53 @@ CRITICAL GUIDELINES:
 3. Provide actionable, evidence-based recommendations
 4. Acknowledge specific issues mentioned by the user
 5. Be empathetic but realistic - avoid generic platitudes when there are serious concerns
+6. Recognize when physical health indicators don't match emotional state
+7. NEVER be overly positive when mood is low, even if other factors are good
 
 SEVERITY ASSESSMENT:
-- LOW: Generally doing well (mood 7-10, sleep 7-10, active 6-10). OR just "okay" (5-6 range) with no critical issues.
-- MODERATE: Multiple mediocre factors (5/10 range), 2+ critical concerns, OR missed meds + other issues
-- HIGH: Missed medication + very low mood (≤3) OR 3+ critical factors
+- LOW: All factors genuinely good (mood 7-10, sleep 7-10, active 6-10)
+- MODERATE: 
+  * Multiple mediocre factors (5-6 range)
+  * Mood discrepancy (good sleep/activity but mood 4-6 - suggests underlying issues)
+  * 1-2 critical concerns
+  * Missed meds + other issues
+- HIGH: 
+  * Missed medication + very low mood (≤3)
+  * 3+ critical factors
+  * Severe discrepancy (excellent sleep/activity but mood ≤4)
 
 SCORE INTERPRETATION:
 - 8-10: Excellent/Great - celebrate and reinforce
-- 6-7: Good/Stable - acknowledge positively
-- 5: Okay/Mediocre - acknowledge reality, gentle encouragement to improve
+- 6-7: Good/Stable - acknowledge positively but watch for discrepancies
+- 5-6: Okay/Mediocre - acknowledge honestly, validate feeling stuck, provide encouragement
 - 3-4: Concerning - need support and actionable steps
 - 1-2: Critical - immediate intervention, crisis resources
 
-IMPORTANT NUANCE - Missed Medication:
-- If medication missed BUT everything else is excellent → LOW risk (gentle reminder about consistency)
-- If medication missed AND other concerns present → MODERATE or HIGH risk (more serious intervention)
+IMPORTANT PATTERN RECOGNITION:
 
-For HIGH severity: Focus on immediate support, professional help, and crisis resources
-For MODERATE: Balance concern with encouragement, specific actionable steps
-For LOW: 
-  - If scores 7-10: Positive reinforcement, celebrate success
-  - If scores 5-6: Acknowledge "okay" status, gentle encouragement to improve without being dismissive
-  - If meds missed but feeling great: Gentle reminder about consistency"""
+**Discrepancy Detection (HIGH PRIORITY):**
+When sleep quality and/or physical activity are significantly higher (7-10) than mood (≤6), this is a RED FLAG:
+- This suggests underlying mental health issues that lifestyle factors aren't addressing
+- Physical health alone cannot fix chemical/psychological imbalances
+- May indicate depression, anxiety, or other conditions requiring professional support
+- Response should be concerned and recommend professional evaluation
+- Example: Sleep 8-9, Activity 8, but Mood 4-5 → "I notice you're taking good care of your physical health, but your mood isn't reflecting that - this is important to address with a professional"
+
+**Medication Adherence Context:**
+- If medication missed BUT everything else is excellent → MODERATE risk (consistency matters)
+- If medication missed AND other concerns present → HIGH risk (more serious intervention)
+
+RESPONSE TONE BY SEVERITY:
+- HIGH: Serious, supportive, directive - emphasize professional help
+- MODERATE: Concerned, empathetic, constructive - acknowledge struggles honestly
+- LOW: Genuinely positive and encouraging (only when things are actually going well)
+
+**For "Okay" Feelings (5-6 range):**
+- Don't dismiss with overly positive platitudes
+- Acknowledge that "okay" is valid but not ideal
+- Explore whether this is a plateau or subtle decline
+- Provide gentle, realistic encouragement
+- Validate that they deserve to feel better than just "okay\""""
 
 
 def build_survey_prompt(
@@ -67,16 +92,34 @@ def build_survey_prompt(
         Formatted prompt for Claude
     """
     
+    # Detect discrepancy between physical health and mood
+    discrepancy_alert = ""
+    physical_avg = (sleep_quality + physical_activity) / 2
+    mood_physical_gap = physical_avg - mood_rating
+    
+    if physical_avg >= 7 and mood_rating <= 6:
+        discrepancy_alert = f"""
+⚠️ CRITICAL DISCREPANCY DETECTED:
+Physical health indicators (Sleep: {sleep_quality}, Activity: {physical_activity}) are MUCH better than mood ({mood_rating}).
+This suggests underlying mental health issues that lifestyle factors alone aren't addressing.
+This person may need professional mental health support - physical health alone cannot resolve this."""
+    elif physical_avg >= 6 and mood_rating <= 4:
+        discrepancy_alert = f"""
+⚠️ SEVERE DISCREPANCY DETECTED:
+Despite adequate sleep ({sleep_quality}) and activity ({physical_activity}), mood is very low ({mood_rating}).
+This is a red flag for depression or other mental health conditions requiring professional evaluation."""
+    
     # Build context about severity
     severity_context = f"""
 CALCULATED RISK LEVEL: {determined_risk.upper()}
 IDENTIFIED CONCERNS: {', '.join(concerns) if concerns else 'None'}
+{discrepancy_alert}
 
 ASSESSMENT CONTEXT:
 - Medication adherence: {'✓ Taken' if medication_taken else '✗ MISSED (concerning)'}
-- Mood: {mood_rating}/10 {'(CRITICAL - very low)' if mood_rating <= 3 else '(concerning)' if mood_rating <= 5 else '(stable)' if mood_rating <= 7 else '(good)'}
-- Sleep: {sleep_quality}/10 {'(CRITICAL - very poor)' if sleep_quality <= 3 else '(concerning)' if sleep_quality <= 5 else '(stable)' if sleep_quality <= 7 else '(good)'}
-- Activity: {physical_activity}/10 {'(CRITICAL - minimal)' if physical_activity <= 2 else '(low)' if physical_activity <= 5 else '(moderate)' if physical_activity <= 7 else '(good)'}
+- Mood: {mood_rating}/10 {'(CRITICAL - very low)' if mood_rating <= 3 else '(concerning - low)' if mood_rating <= 5 else '(mediocre - just okay)' if mood_rating == 6 else '(stable)' if mood_rating <= 7 else '(good)'}
+- Sleep: {sleep_quality}/10 {'(CRITICAL - very poor)' if sleep_quality <= 3 else '(concerning)' if sleep_quality <= 5 else '(mediocre - just okay)' if sleep_quality == 6 else '(stable)' if sleep_quality <= 7 else '(good)'}
+- Activity: {physical_activity}/10 {'(CRITICAL - minimal)' if physical_activity <= 2 else '(low)' if physical_activity <= 5 else '(mediocre - just okay)' if physical_activity == 6 else '(moderate)' if physical_activity <= 7 else '(good)'}
 """
 
     # Risk-specific instructions
@@ -144,9 +187,11 @@ RECOMMENDATIONS:
 - [Specific recommendation 2 based on their concerns]
 - [Specific recommendation 3 based on their concerns]
 
-KEY_CONCERNS: [concern1, concern2, concern3]
+KEY_CONCERNS: concern1, concern2, concern3
 
 RISK_LEVEL: {determined_risk}
+
+NOTE: Do NOT include square brackets [] around the KEY_CONCERNS list - just provide comma-separated values.
 
 REMEMBER: 
 - Be specific to THEIR situation - no generic "it's okay to have ups and downs" when there are serious concerns
@@ -163,29 +208,57 @@ def get_fallback_recommendations(risk_level: str, concerns: list, mood: int = 5,
     Args:
         risk_level: The determined risk level
         concerns: List of identified concerns
+        mood: Mood rating (for better contextual responses)
+        sleep: Sleep quality (for better contextual responses)
+        activity: Physical activity (for better contextual responses)
         
     Returns:
         Dictionary with message and recommendations
     """
     
+    # Check for discrepancies
+    physical_avg = (sleep + activity) / 2
+    has_discrepancy = physical_avg >= 7 and mood <= 6
+    has_severe_discrepancy = physical_avg >= 6 and mood <= 4
+    
     if risk_level == "high":
-        return {
-            "message": "I'm concerned about what you're sharing. When multiple aspects of our wellbeing are struggling - especially mood, sleep, and medication - it's really important to reach out for support. You don't have to face this alone.",
-            "recommendations": [
-                "Please contact your healthcare provider or therapist today - this is important",
-                "If you're feeling unsafe, call 988 (Suicide Prevention Lifeline) or text HOME to 741741",
-                "Try to take your medication as prescribed - it's a crucial foundation for stability"
-            ]
-        }
+        if has_severe_discrepancy:
+            return {
+                "message": f"I'm noticing something important: you're taking good care of your physical health (sleep: {sleep}/10, activity: {activity}/10), but your mood is {mood}/10. When physical health is good but mood remains low, it often points to underlying mental health issues that need professional attention. This isn't something lifestyle changes alone can fix.",
+                "recommendations": [
+                    "Please schedule an appointment with a mental health professional - this discrepancy is significant",
+                    "If you have a therapist or psychiatrist, let them know about this pattern as soon as possible",
+                    "If you're feeling unsafe or having dark thoughts, call 988 (Suicide Prevention Lifeline) immediately"
+                ]
+            }
+        else:
+            return {
+                "message": "I'm concerned about what you're sharing. When multiple aspects of our wellbeing are struggling - especially mood, sleep, and medication - it's really important to reach out for support. You don't have to face this alone.",
+                "recommendations": [
+                    "Please contact your healthcare provider or therapist today - this is important",
+                    "If you're feeling unsafe, call 988 (Suicide Prevention Lifeline) or text HOME to 741741",
+                    "Try to take your medication as prescribed - it's a crucial foundation for stability"
+                ]
+            }
     elif risk_level == "moderate":
+        if has_discrepancy:
+            return {
+                "message": f"I notice you're maintaining good physical habits (sleep: {sleep}/10, activity: {activity}/10), but your mood is at {mood}/10. This suggests your physical health isn't translating to emotional wellbeing, which is worth exploring with professional support. There may be underlying factors that need attention.",
+                "recommendations": [
+                    "Consider scheduling a session with a therapist or counselor to explore what's affecting your mood",
+                    "Keep track of this pattern - note when physical health is good but mood stays low",
+                    "Don't dismiss your feelings just because you're 'doing everything right' - your mood matters"
+                ]
+            }
+        
         concern_specific = []
         if "missed_medication" in concerns:
             concern_specific.append("Set up medication reminders on your phone or pair it with a daily habit")
-        if "low_mood" in concerns or "poor_sleep" in concerns:
+        if "low_mood" in concerns or "mediocre_mood" in concerns:
             concern_specific.append("Reach out to a friend, family member, or therapist for support")
-        if "poor_sleep" in concerns:
+        if "poor_sleep" in concerns or "mediocre_sleep" in concerns:
             concern_specific.append("Try a calming bedtime routine - avoid screens 30 minutes before bed")
-        if "minimal_activity" in concerns:
+        if "minimal_activity" in concerns or "low_activity" in concerns:
             concern_specific.append("Start with just 10 minutes of gentle movement or a short walk")
         
         # Fill to 3 recommendations
@@ -207,6 +280,16 @@ def get_fallback_recommendations(risk_level: str, concerns: list, mood: int = 5,
                     "Set up a daily medication reminder to help with consistency",
                     "Consider pairing medication with a daily habit (morning coffee, brushing teeth)",
                     "Keep up your excellent self-care - you're doing wonderfully!"
+                ]
+            }
+        # Check if things are "just okay" (6 range)
+        elif mood == 6 or "okay_mood" in concerns:
+            return {
+                "message": f"You're feeling 'okay' (mood: {mood}/10), which is valid - but I wonder if there's room to feel better. You're maintaining stability, and that's worth acknowledging. Let's explore some gentle ways to move from 'okay' to 'good.'",
+                "recommendations": [
+                    "Reflect on what might help shift from 'okay' to 'good' - sometimes small changes make a difference",
+                    "Consider whether 'okay' is a plateau or a subtle decline - trust your instincts",
+                    "You deserve to feel better than just 'okay' - explore what that might look like for you"
                 ]
             }
         # Check if things are mediocre (5/10 range)
