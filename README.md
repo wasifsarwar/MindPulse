@@ -2,6 +2,52 @@
 
 AI-powered mental health support using Claude with RAG (Retrieval-Augmented Generation).
 
+## 🎥 Product Demo
+
+See MindPulse in action across three real-world scenarios:
+
+### Scenario 1: High Wellbeing ✅
+**When things are going well**
+
+https://github.com/user-attachments/assets/YOUR_VIDEO_ID_HERE_1
+
+*User reports positive mood, good sleep, and consistent medication adherence. MindPulse provides positive reinforcement and encouragement to maintain healthy habits.*
+
+**To embed this video:** Upload `videos/MindPulseGreat.mp4` to a GitHub issue comment, then copy the generated URL and replace the placeholder above.
+
+---
+
+### Scenario 2: Moderate Concerns ⚠️
+**When you're feeling "just okay"**
+
+https://github.com/user-attachments/assets/YOUR_VIDEO_ID_HERE_2
+
+*User reports mediocre mood despite good physical health. MindPulse detects the discrepancy and provides balanced, realistic support with actionable recommendations.*
+
+**To embed this video:** Upload `videos/MindPulseMeh.mp4` to a GitHub issue comment, then copy the generated URL and replace the placeholder above.
+
+---
+
+### Scenario 3: High Risk 🚨
+**When immediate support is needed**
+
+https://github.com/user-attachments/assets/YOUR_VIDEO_ID_HERE_3
+
+*User reports concerning patterns (low mood, missed medication, poor sleep). MindPulse escalates appropriately, provides crisis resources, and automatically alerts the healthcare provider.*
+
+**To embed this video:** Upload `videos/MindPulseWorse.mp4` to a GitHub issue comment, then copy the generated URL and replace the placeholder above.
+
+---
+
+> **💡 How to embed videos in GitHub README:**
+> 1. Create a new issue in your repo (you can delete it later)
+> 2. Drag and drop each video file into the issue comment box
+> 3. Wait for it to upload and generate a URL like `https://github.com/user-attachments/assets/...`
+> 4. Copy that URL and paste it directly into the README (replace the placeholders above)
+> 5. The video will then play inline in your README!
+
+---
+
 ## 🚀 Quick Start
 
 ### Backend Setup
@@ -51,11 +97,24 @@ App opens at: http://localhost:3000
 
 Open http://localhost:3000 in your browser, fill out the survey, and see Claude's empathetic response!
 
+## 🎬 Video Scenarios
+
+All demo videos are located in the [`videos/`](./videos/) folder:
+- [`MindPulseGreat.mp4`](./videos/MindPulseGreat.mp4) - High wellbeing scenario
+- [`MindPulseMeh.mp4`](./videos/MindPulseMeh.mp4) - Moderate concerns scenario  
+- [`MindPulseWorse.mp4`](./videos/MindPulseWorse.mp4) - High risk scenario
+
+> **Note:** Click the badges in the Product Demo section above to view/download each scenario video.
+
 ## 📁 Project Structure
 
 ```
 MindPulse/
 ├── README.md
+├── videos/                        # Product demo videos
+│   ├── MindPulseGreat.mp4
+│   ├── MindPulseMeh.mp4
+│   └── MindPulseWorse.mp4
 ├── src/
 │   ├── dataset/                    # Kaggle datasets
 │   │   ├── mentalHealthCounselingConversations/
