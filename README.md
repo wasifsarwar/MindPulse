@@ -9,7 +9,7 @@ See MindPulse in action across three real-world scenarios:
 ### Scenario 1: High Wellbeing ✅
 **When things are going well**
 
-https://github.com/user-attachments/assets/YOUR_VIDEO_ID_HERE_1
+https://github.com/user-attachments/assets/afbf4a3b-fc41-488a-8e57-bfedeb2ed19d
 
 *User reports positive mood, good sleep, and consistent medication adherence. MindPulse provides positive reinforcement and encouragement to maintain healthy habits.*
 
@@ -20,7 +20,7 @@ https://github.com/user-attachments/assets/YOUR_VIDEO_ID_HERE_1
 ### Scenario 2: Moderate Concerns ⚠️
 **When you're feeling "just okay"**
 
-https://github.com/user-attachments/assets/YOUR_VIDEO_ID_HERE_2
+https://github.com/user-attachments/assets/a6fd6793-fdfa-4bb6-967f-e0bfd963210f
 
 *User reports mediocre mood despite good physical health. MindPulse detects the discrepancy and provides balanced, realistic support with actionable recommendations.*
 
@@ -31,7 +31,7 @@ https://github.com/user-attachments/assets/YOUR_VIDEO_ID_HERE_2
 ### Scenario 3: High Risk 🚨
 **When immediate support is needed**
 
-https://github.com/user-attachments/assets/YOUR_VIDEO_ID_HERE_3
+https://github.com/user-attachments/assets/4cc5b36f-a711-435a-add2-f3f29c561aa9
 
 *User reports concerning patterns (low mood, missed medication, poor sleep). MindPulse escalates appropriately, provides crisis resources, and automatically alerts the healthcare provider.*
 
