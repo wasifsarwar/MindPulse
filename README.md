@@ -2,53 +2,35 @@
 
 AI-powered mental health support using Claude with RAG (Retrieval-Augmented Generation).
 
-## 🎥 Product Demo
+## Product Demo
 
-See MindPulse in action across three real-world scenarios:
+MindPulse adapts its responses based on mental health risk levels:
 
-### Scenario 1: High Wellbeing ✅
-**When things are going well**
+### Scenario 1: Low Risk - High Wellbeing
 
 https://github.com/user-attachments/assets/afbf4a3b-fc41-488a-8e57-bfedeb2ed19d
 
-*User reports positive mood, good sleep, and consistent medication adherence. MindPulse provides positive reinforcement and encouragement to maintain healthy habits.*
-
-**To embed this video:** Upload `videos/MindPulseGreat.mp4` to a GitHub issue comment, then copy the generated URL and replace the placeholder above.
+User reports positive mood, good sleep, and consistent medication. MindPulse provides positive reinforcement and encouragement.
 
 ---
 
-### Scenario 2: Moderate Concerns ⚠️
-**When you're feeling "just okay"**
+### Scenario 2: Moderate Risk - Discrepancy Detected
 
 https://github.com/user-attachments/assets/a6fd6793-fdfa-4bb6-967f-e0bfd963210f
 
-*User reports mediocre mood despite good physical health. MindPulse detects the discrepancy and provides balanced, realistic support with actionable recommendations.*
-
-**To embed this video:** Upload `videos/MindPulseMeh.mp4` to a GitHub issue comment, then copy the generated URL and replace the placeholder above.
+User reports mediocre mood despite good physical health. MindPulse detects this discrepancy and provides balanced support with actionable recommendations.
 
 ---
 
-### Scenario 3: High Risk 🚨
-**When immediate support is needed**
+### Scenario 3: High Risk - Intervention Required
 
 https://github.com/user-attachments/assets/4cc5b36f-a711-435a-add2-f3f29c561aa9
 
-*User reports concerning patterns (low mood, missed medication, poor sleep). MindPulse escalates appropriately, provides crisis resources, and automatically alerts the healthcare provider.*
-
-**To embed this video:** Upload `videos/MindPulseWorse.mp4` to a GitHub issue comment, then copy the generated URL and replace the placeholder above.
+User reports concerning patterns (low mood, missed medication, poor sleep). MindPulse escalates appropriately with crisis resources and automatically alerts the healthcare provider.
 
 ---
 
-> **💡 How to embed videos in GitHub README:**
-> 1. Create a new issue in your repo (you can delete it later)
-> 2. Drag and drop each video file into the issue comment box
-> 3. Wait for it to upload and generate a URL like `https://github.com/user-attachments/assets/...`
-> 4. Copy that URL and paste it directly into the README (replace the placeholders above)
-> 5. The video will then play inline in your README!
-
----
-
-## 🚀 Quick Start
+## Quick Start
 
 ### Backend Setup
 
@@ -58,7 +40,7 @@ https://github.com/user-attachments/assets/4cc5b36f-a711-435a-add2-f3f29c561aa9
    pip install -r requirements.txt
    ```
 
-   *(Optional)* **For SMS alerts**: See [src/server/SMS_SETUP.md](src/server/SMS_SETUP.md)
+   Optional: For SMS alerts, see [src/server/SMS_SETUP.md](src/server/SMS_SETUP.md)
 
 2. **Configure API Key**
 ```bash
@@ -97,16 +79,8 @@ App opens at: http://localhost:3000
 
 Open http://localhost:3000 in your browser, fill out the survey, and see Claude's empathetic response!
 
-## 🎬 Video Scenarios
 
-All demo videos are located in the [`videos/`](./videos/) folder:
-- [`MindPulseGreat.mp4`](./videos/MindPulseGreat.mp4) - High wellbeing scenario
-- [`MindPulseMeh.mp4`](./videos/MindPulseMeh.mp4) - Moderate concerns scenario  
-- [`MindPulseWorse.mp4`](./videos/MindPulseWorse.mp4) - High risk scenario
-
-> **Note:** Click the badges in the Product Demo section above to view/download each scenario video.
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 MindPulse/
@@ -142,7 +116,7 @@ MindPulse/
 │       └── README.md
 ```
 
-## 🎯 API Endpoints
+## API Endpoints
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
@@ -184,17 +158,17 @@ Response:
 }
 ```
 
-**🚨 Provider Alert Feature:**
+**Provider Alert Feature:**
 - If mental health deterioration is detected (e.g., very low mood, missed medication)
 - `provider_contacted` will be `true`
 - An SMS is automatically sent to the configured healthcare provider
 - Web UI displays a notification to the user
 
-## 📖 API Documentation
+## API Documentation
 
 Visit http://localhost:8000/docs for interactive API documentation.
 
-## 🧪 Testing
+## Testing
 
 **Test the survey endpoint:**
 ```bash
@@ -224,16 +198,16 @@ curl -X POST http://localhost:8000/api/analyze-survey \
 **Interactive docs:**
 Open browser: http://localhost:8000/docs
 
-## 📊 Datasets
+## Datasets
 
 Three Kaggle datasets:
-1. **Counseling Conversations** (3,512 conversations) ✅ Included
+1. **Counseling Conversations** (3,512 conversations) - Included
 2. **Sentiment Analysis** - Download from Kaggle
 3. **Diagnosis & Treatment** - Download from Kaggle
 
 The system works with placeholder data if datasets 2 & 3 aren't downloaded.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Backend:** FastAPI + Python
 - **AI:** Claude 3.5 Sonnet (Anthropic)
@@ -242,7 +216,7 @@ The system works with placeholder data if datasets 2 & 3 aren't downloaded.
 - **Data:** Pandas + NumPy
 - **Frontend:** TypeScript + React
 
-## 🔧 Configuration
+## Configuration
 
 Edit `server/.env`:
 ```env
@@ -253,9 +227,9 @@ CLAUDE_MODEL=claude-3-5-sonnet-20241022
 # SMS Alerts (Optional - for provider notifications)
 ENABLE_SMS_ALERTS=False
 TWILIO_ACCOUNT_SID=your_twilio_sid
+```
 
-
-## ⚠️ Important
+## Important
 
 This is for educational/hackathon purposes only. NOT a replacement for professional mental health care.
 
@@ -263,6 +237,6 @@ This is for educational/hackathon purposes only. NOT a replacement for professio
 - Suicide Prevention Lifeline: 988 or 1-800-273-8255
 - Crisis Text Line: Text HOME to 741741
 
-## 📝 License
+## License
 
 For hackathon use.
