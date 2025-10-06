@@ -80,52 +80,18 @@ App opens at: http://localhost:3000
 Open http://localhost:3000 in your browser, fill out the survey, and see Claude's empathetic response!
 
 
-## Project Structure
-
-```
-MindPulse/
-├── README.md
-├── videos/                        # Product demo videos
-│   ├── MindPulseGreat.mp4
-│   ├── MindPulseMeh.mp4
-│   └── MindPulseWorse.mp4
-├── src/
-│   ├── dataset/                    # Kaggle datasets
-│   │   ├── mentalHealthCounselingConversations/
-│   │   ├── sentiment_analysis/
-│   │   └── diagnosis_treatment/
-│   ├── server/                     # Backend (Python)
-│   │   ├── main.py                 # Entry point
-│   │   ├── config.py              # Configuration
-│   │   ├── requirements.txt       # Dependencies
-│   │   ├── .env                   # API keys (create this)
-│   │   ├── agents/                # Claude AI agent
-│   │   ├── api/                   # FastAPI routes
-│   │   ├── data_loaders/          # Dataset loaders
-│   │   ├── prompts/               # Prompt engineering
-│   │   ├── utils/                 # Utilities
-│   │   └── tests/                 # Test files
-│   └── web/                       # Frontend (TypeScript React)
-│       ├── public/
-│       ├── src/
-│       │   ├── components/        # Survey form & results
-│       │   ├── services/          # API calls
-│       │   ├── types/             # TypeScript types
-│       │   └── App.tsx            # Main component
-│       ├── package.json
-│       └── README.md
-```
-
 ## API Endpoints
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
-| `/api/analyze-survey` | POST | **Daily survey analysis** (for your web app) |
-| `/api/chat` | POST | Mental health chat |
-| `/api/analyze-sentiment` | POST | Sentiment analysis |
-| `/api/diagnose` | POST | Symptom insights |
-| `/api/health` | GET | System status |
+| `/api/analyze-survey` | POST | Daily survey analysis (primary endpoint) |
+| `/api/chat` | POST | Conversational mental health support |
+| `/api/analyze-sentiment` | POST | Sentiment and emotion analysis |
+| `/api/diagnose` | POST | Symptom pattern insights |
+| `/api/health` | GET | System health check |
 | `/api/stats` | GET | Dataset statistics |
+| `/api/session/{id}` | GET | Get conversation history |
+| `/api/session/{id}` | DELETE | Clear conversation history |
 
 ### Survey Endpoint (Main endpoint for your web app)
 
@@ -164,25 +130,35 @@ Response:
 - An SMS is automatically sent to the configured healthcare provider
 - Web UI displays a notification to the user
 
-## API Documentation
+**Interactive API Documentation:** http://localhost:8000/docs (Swagger) or http://localhost:8000/redoc
 
-Visit http://localhost:8000/docs for interactive API documentation.
+## Key Features
+
+- **Risk-Based Assessment**: Automatically classifies responses as low, moderate, or high risk
+- **Discrepancy Detection**: Identifies when physical health metrics don't match emotional state
+- **Contextual Responses**: Uses RAG with 3,512+ counseling conversations for empathetic replies
+- **Provider Alerts**: Automatic SMS notifications to healthcare providers when deterioration is detected
+- **Personalized Recommendations**: Tailored, actionable suggestions based on specific concerns
+- **Session Management**: Maintains conversation context across interactions
+- **Comprehensive Logging**: All interactions logged to `src/logs/mindpulse.log`
 
 ## Testing
 
-**Test the survey endpoint:**
+**Run survey endpoint tests:**
 ```bash
 cd src/server/tests
 python3 test_survey.py
 ```
 
-**Test all endpoints:**
+**Test different scenarios:**
 ```bash
 cd src/server/tests
-python3 test_api.py
+python3 test_all_scenarios.py      # Test multiple use cases
+python3 test_critical_survey.py    # Test high-risk scenarios
+python3 test_sms_detection.py      # Test SMS alert system
 ```
 
-**Manual test (cURL):**
+**Manual API test (cURL):**
 ```bash
 curl -X POST http://localhost:8000/api/analyze-survey \
   -H "Content-Type: application/json" \
@@ -195,17 +171,26 @@ curl -X POST http://localhost:8000/api/analyze-survey \
   }'
 ```
 
-**Interactive docs:**
-Open browser: http://localhost:8000/docs
+**Interactive API documentation:**
+Visit http://localhost:8000/docs (Swagger UI) or http://localhost:8000/redoc (ReDoc)
 
 ## Datasets
 
-Three Kaggle datasets:
-1. **Counseling Conversations** (3,512 conversations) - Included
-2. **Sentiment Analysis** - Download from Kaggle
-3. **Diagnosis & Treatment** - Download from Kaggle
+MindPulse uses three mental health datasets for RAG:
 
-The system works with placeholder data if datasets 2 & 3 aren't downloaded.
+1. **Counseling Conversations** - 3,512 mental health counseling conversations
+   - Located: `src/dataset/mentalHealthCounselingConversations/`
+   - Status: Included in repository
+
+2. **Sentiment Analysis** - Emotional state classification data
+   - Located: `src/dataset/sentiment_analysis/`
+   - Status: Included in repository
+
+3. **Diagnosis & Treatment** - Symptom patterns and treatment insights
+   - Located: `src/dataset/diagnosis_treatment/`
+   - Status: Included in repository
+
+All datasets are loaded at startup. The system uses RAG with sentence transformers for semantic search.
 
 ## Tech Stack
 
@@ -218,16 +203,44 @@ The system works with placeholder data if datasets 2 & 3 aren't downloaded.
 
 ## Configuration
 
-Edit `server/.env`:
-```env
-ANTHROPIC_API_KEY=your_key_here
-FASTAPI_PORT=8000
-CLAUDE_MODEL=claude-3-5-sonnet-20241022
+Create `src/server/.env` from the template:
 
-# SMS Alerts (Optional - for provider notifications)
+```bash
+cd src/server
+cp env-template.txt .env
+```
+
+Key configuration options:
+
+```env
+# Required
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+
+# API Settings
+FASTAPI_HOST=0.0.0.0
+FASTAPI_PORT=8000
+FASTAPI_RELOAD=True
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
+
+# AI Configuration
+CLAUDE_MODEL=claude-3-5-sonnet-20241022
+MAX_TOKENS=2048
+TEMPERATURE=0.7
+EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+MAX_CONTEXT_EXAMPLES=5
+
+# SMS Alerts (Optional)
 ENABLE_SMS_ALERTS=False
 TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_token
+TWILIO_PHONE_NUMBER=+1234567890
+PROVIDER_PHONE_NUMBER=+1234567890
+
+# Logging
+LOG_LEVEL=INFO
 ```
+
+See [env-template.txt](src/server/env-template.txt) for all configuration options.
 
 ## Important
 
